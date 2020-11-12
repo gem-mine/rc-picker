@@ -25,6 +25,10 @@ const generateConfig: GenerateConfig<Moment> = {
     const clone = date.clone();
     return clone.add(diff, 'month');
   },
+  addWeek: (date, diff) => {
+    const clone = date.clone()
+    return clone.add(diff, 'week')
+  },
   addDate: (date, diff) => {
     const clone = date.clone();
     return clone.add(diff, 'day');
@@ -33,9 +37,17 @@ const generateConfig: GenerateConfig<Moment> = {
     const clone = date.clone();
     return clone.year(year);
   },
+  setWeek: (date, week) => {
+    const clone = date.clone()
+    return clone.week(week)
+  },
   setMonth: (date, month) => {
     const clone = date.clone();
     return clone.month(month);
+  },
+  setWeekDay: (date, weekday) => {
+    const clone = date.clone();
+    return clone.weekday(weekday);
   },
   setDate: (date, num) => {
     const clone = date.clone();

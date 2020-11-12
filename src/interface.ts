@@ -40,7 +40,7 @@ export interface Locale {
   shortMonths?: string[];
 }
 
-export type PanelMode = 'time' | 'date' | 'week' | 'month' | 'quarter' | 'year' | 'decade';
+export type PanelMode = 'time' | 'date' | 'week' | 'weekOnly' | 'month' | 'quarter' | 'year' | 'decade';
 
 export type PickerMode = Exclude<PanelMode, 'datetime' | 'decade'>;
 
