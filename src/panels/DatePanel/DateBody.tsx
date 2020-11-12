@@ -2,12 +2,12 @@ import * as React from 'react';
 import { GenerateConfig } from '../../generate';
 import {
   WEEK_DAY_COUNT,
-  getWeekStartDate,
+  getMonthStartDate,
   isSameDate,
   isSameMonth,
   formatValue,
 } from '../../utils/dateUtil';
-import { Locale } from '../../interface';
+import { Locale, PickerMode } from '../../interface';
 import RangeContext from '../../RangeContext';
 import useCellClassName from '../../hooks/useCellClassName';
 import PanelBody from '../PanelBody';
@@ -31,6 +31,8 @@ export interface DateBodyProps<DateType> extends DateBodyPassProps<DateType> {
   locale: Locale;
   rowCount: number;
   onSelect: (value: DateType) => void;
+  picker?: PickerMode;
+  mode?: PickerMode
 }
 
 function DateBody<DateType>(props: DateBodyProps<DateType>) {
@@ -39,15 +41,23 @@ function DateBody<DateType>(props: DateBodyProps<DateType>) {
     generateConfig,
     prefixColumn,
     locale,
-    rowCount,
     viewDate,
     value,
     dateRender,
+    mode,
+    picker,
   } = props;
 
+  let { rowCount } = props
   const { rangedValue, hoverRangedValue } = React.useContext(RangeContext);
+  const mergedMode = mode ?? picker
+  // 获取基准的日期 也就是面板上的第一天
+  let baseDate = getMonthStartDate(locale.locale, generateConfig, viewDate);
+  if (mergedMode === 'weekOnly') {
+    baseDate = generateConfig.setWeekDay(viewDate, 1);
+    rowCount = 1
+  }
 
-  const baseDate = getWeekStartDate(locale.locale, generateConfig, viewDate);
   const cellPrefixCls = `${prefixCls}-cell`;
   const weekFirstDay = generateConfig.locale.getWeekFirstDay(locale.locale);
   const today = generateConfig.getNow();
@@ -76,7 +86,8 @@ function DateBody<DateType>(props: DateBodyProps<DateType>) {
     rangedValue: prefixColumn ? null : rangedValue,
     hoverRangedValue: prefixColumn ? null : hoverRangedValue,
     isSameCell: (current, target) => isSameDate(generateConfig, current, target),
-    isInView: date => isSameMonth(generateConfig, date, viewDate),
+    // 月模式下上下个月的置灰，周模式不要有置灰
+    isInView: mergedMode === 'weekOnly' ? () => true : date => isSameMonth(generateConfig, date, viewDate),
     offsetCell: (date, offset) => generateConfig.addDate(date, offset),
   });
 

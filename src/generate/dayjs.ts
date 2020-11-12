@@ -60,9 +60,12 @@ const generateConfig: GenerateConfig<Dayjs> = {
   // set
   addYear: (date, diff) => date.add(diff, 'year'),
   addMonth: (date, diff) => date.add(diff, 'month'),
+  addWeek: (date, diff) => date.add(diff, 'week'),
   addDate: (date, diff) => date.add(diff, 'day'),
   setYear: (date, year) => date.year(year),
   setMonth: (date, month) => date.month(month),
+  setWeek: (date, week) => date.week(week),
+  setWeekDay: (date, weekDay) => date.weekday(weekDay),
   setDate: (date, num) => date.date(num),
   setHour: (date, hour) => date.hour(hour),
   setMinute: (date, minute) => date.minute(minute),

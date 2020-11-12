@@ -226,6 +226,7 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
   };
 
   // Save panel is changed from which panel
+  // picker 和 mode 同时存在的时候，mode 的优先级更高
   const [mergedMode, setInnerMode] = useMergedState(
     () => {
       if (picker === 'time') {
@@ -407,6 +408,16 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
           {...pickerProps}
           onSelect={(date, type) => {
             setViewDate(date);
+            triggerSelect(date, type);
+          }}
+        />
+      );
+      break;
+    case 'weekOnly':
+      panelNode = (
+        <DatePanel<DateType>
+          {...pickerProps}
+          onSelect={(date, type) => {
             triggerSelect(date, type);
           }}
         />
