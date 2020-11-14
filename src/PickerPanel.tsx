@@ -459,7 +459,7 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
           <DatePanel<DateType>
             {...pickerProps}
             onSelect={(date, type) => {
-              setViewDate(date);
+              setViewDate(generateConfig.addDate(date, -firstDayOfMonth + 1));
               triggerSelect(date, type);
             }}
           />
