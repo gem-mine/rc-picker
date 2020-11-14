@@ -32,7 +32,8 @@ export interface DateBodyProps<DateType> extends DateBodyPassProps<DateType> {
   rowCount: number;
   onSelect: (value: DateType) => void;
   picker?: PickerMode;
-  mode?: PickerMode
+  mode?: PickerMode,
+  firstDayOfMonth?: number,
 }
 
 function DateBody<DateType>(props: DateBodyProps<DateType>) {
@@ -46,21 +47,23 @@ function DateBody<DateType>(props: DateBodyProps<DateType>) {
     dateRender,
     mode,
     picker,
+    firstDayOfMonth,
   } = props;
 
   let { rowCount } = props
   const { rangedValue, hoverRangedValue } = React.useContext(RangeContext);
   const mergedMode = mode ?? picker
   // 获取基准的日期 也就是面板上的第一天
-  let baseDate = getMonthStartDate(locale.locale, generateConfig, viewDate);
+  let baseDate = getMonthStartDate(locale.locale, generateConfig, viewDate, firstDayOfMonth);
   if (mergedMode === 'weekOnly') {
+    // 将月的起始周的第一天设为第一天
     baseDate = generateConfig.setWeekDay(viewDate, 1);
     rowCount = 1
   }
 
   const cellPrefixCls = `${prefixCls}-cell`;
   const weekFirstDay = generateConfig.locale.getWeekFirstDay(locale.locale);
-  const today = generateConfig.getNow();
+  const today = generateConfig.addDate(generateConfig.getNow(), firstDayOfMonth)
 
   // ============================== Header ==============================
   const headerCells: React.ReactNode[] = [];
@@ -87,7 +90,13 @@ function DateBody<DateType>(props: DateBodyProps<DateType>) {
     hoverRangedValue: prefixColumn ? null : hoverRangedValue,
     isSameCell: (current, target) => isSameDate(generateConfig, current, target),
     // 月模式下上下个月的置灰，周模式不要有置灰
-    isInView: mergedMode === 'weekOnly' ? () => true : date => isSameMonth(generateConfig, date, viewDate),
+    isInView: mergedMode === 'weekOnly' ?
+      () => true :
+        date => isSameMonth(
+          generateConfig,
+          generateConfig.addDate(date, -firstDayOfMonth + 1),
+          viewDate
+        ),
     offsetCell: (date, offset) => generateConfig.addDate(date, offset),
   });
 

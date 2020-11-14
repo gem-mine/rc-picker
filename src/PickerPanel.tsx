@@ -84,6 +84,9 @@ export interface PickerPanelSharedProps<DateType> {
 
   /** @private Internal usage. Do not use in your production env */
   components?: Components;
+
+  /** 设置周起始日 */
+  firstDayOfMonth?: number;
 }
 
 export interface PickerPanelBaseProps<DateType> extends PickerPanelSharedProps<DateType> {
@@ -150,6 +153,7 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
     hourStep = 1,
     minuteStep = 1,
     secondStep = 1,
+    firstDayOfMonth = 1,
   } = props as MergedPickerPanelProps<DateType>;
 
   const needConfirmButton: boolean = (picker === 'date' && !!showTime) || picker === 'time';
@@ -341,6 +345,7 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
 
   const pickerProps = {
     ...(props as MergedPickerPanelProps<DateType>),
+    firstDayOfMonth,
     operationRef: panelRef,
     prefixCls,
     viewDate,
