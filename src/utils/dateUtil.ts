@@ -159,14 +159,15 @@ export function getMonthStartDate<DateType>(
   locale: string,
   generateConfig: GenerateConfig<DateType>,
   value: DateType,
+  firstDayOfMonth?: number
 ) {
   const weekFirstDay = generateConfig.locale.getWeekFirstDay(locale);
-  const monthStartDate = generateConfig.setDate(value, 1);
+  const monthStartDate = generateConfig.setDate(value, firstDayOfMonth || 1);
   const startDateWeekDay = generateConfig.getWeekDay(monthStartDate);
 
   let alignStartDate = generateConfig.addDate(monthStartDate, weekFirstDay - startDateWeekDay);
 
-  // 这里获取到的第一天比如11月2号在面板上的第一天，还有1号在上一周和上个月的日期拍一起
+  // 这里获取到的第一天比如11月2号在面板上的第一天，还有1号在上一周和上个月的日期排一起
   // 所以面板上第一行应该显示上一周的
   if (
     generateConfig.getMonth(alignStartDate) === generateConfig.getMonth(value) &&
