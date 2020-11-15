@@ -443,6 +443,10 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
       );
       break;
 
+    case 'dayOnly':
+      panelNode = null;
+      break;
+
     default:
       if (showTime) {
         panelNode = (
