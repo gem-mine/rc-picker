@@ -63,7 +63,7 @@ function DateBody<DateType>(props: DateBodyProps<DateType>) {
 
   const cellPrefixCls = `${prefixCls}-cell`;
   const weekFirstDay = generateConfig.locale.getWeekFirstDay(locale.locale);
-  const today = generateConfig.addDate(generateConfig.getNow(), firstDayOfMonth)
+  const today = generateConfig.getNow();
 
   // ============================== Header ==============================
   const headerCells: React.ReactNode[] = [];
