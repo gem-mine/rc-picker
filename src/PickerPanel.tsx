@@ -420,7 +420,7 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
         />
       );
       break;
-    case 'weekOnly':
+    case 'calendarWeek':
       panelNode = (
         <DatePanel<DateType>
           {...pickerProps}
@@ -446,7 +446,7 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
       );
       break;
 
-    case 'dayOnly':
+    case 'calendarDay':
       panelNode = (
         <div className={`${prefixCls}-cell-day`}>
           {formatValue(mergedValue, { locale, format: 'YYYY MM DD dddd', generateConfig })}

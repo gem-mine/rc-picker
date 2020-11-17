@@ -5,6 +5,7 @@ import PickerPanel from '../src/PickerPanel';
 import momentGenerateConfig from '../src/generate/moment';
 import zhCN from '../src/locale/zh_CN';
 import '../assets/index.less';
+import { PickerMode } from '../src/interface';
 
 function dateRender(date: Moment, today: Moment) {
   return (
@@ -23,27 +24,36 @@ function dateRender(date: Moment, today: Moment) {
 
 export default () => {
   const [date, setDate] = React.useState(momentGenerateConfig.getNow());
+  let picker: PickerMode = 'calendarWeek'
+  // let picker: PickerMode = 'calendarDay'
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap' }}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <div
           onClick={() => {
-            setDate(momentGenerateConfig.addWeek(date, -1));
+            if (picker === 'calendarWeek') {
+              setDate(momentGenerateConfig.addWeek(date, -1));
+            } else {
+              setDate(momentGenerateConfig.addDate(date, -1));
+            }
           }}
         >
           prev
         </div>
         <PickerPanel<Moment>
           locale={zhCN}
-          // picker="weekOnly"
-          picker="dayOnly"
+          picker={picker}
           value={date}
           generateConfig={momentGenerateConfig}
           dateRender={dateRender}
         />
         <div
           onClick={() => {
-            setDate(momentGenerateConfig.addWeek(date, 1));
+            if (picker === 'calendarWeek') {
+              setDate(momentGenerateConfig.addWeek(date, 1));
+            } else {
+              setDate(momentGenerateConfig.addDate(date, 1));
+            }
           }}
         >
           next
@@ -52,7 +62,7 @@ export default () => {
       <div>
         <Picker<Moment>
           locale={zhCN}
-          picker="weekOnly"
+          picker="calendarWeek"
           generateConfig={momentGenerateConfig}
           dateRender={dateRender}
         />
