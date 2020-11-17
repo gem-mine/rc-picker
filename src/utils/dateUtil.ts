@@ -179,13 +179,6 @@ export function getMonthStartDate<DateType>(
   return alignStartDate;
 }
 
-export function getWeekStartDate<DateType>(
-  generateConfig: GenerateConfig<DateType>,
-  value: DateType,
-) {
-  return generateConfig.setWeekDay(value, 1);
-}
-
 export function getClosingViewDate<DateType>(
   viewDate: DateType,
   picker: PickerMode,
