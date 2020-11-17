@@ -56,8 +56,8 @@ function DateBody<DateType>(props: DateBodyProps<DateType>) {
   // 获取基准的日期 也就是面板上的第一天
   let baseDate = getMonthStartDate(locale.locale, generateConfig, viewDate, firstDayOfMonth);
   if (mergedMode === 'weekOnly') {
-    // 将月的起始周的第一天设为第一天
-    baseDate = generateConfig.setWeekDay(viewDate, 1);
+    // 将可视日期的周第一天设为基准日期
+    baseDate = generateConfig.setWeekDay(viewDate, 0);
     rowCount = 1
   }
 

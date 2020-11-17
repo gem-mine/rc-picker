@@ -30,7 +30,7 @@ import {
   OnPanelChange,
   Components,
 } from './interface';
-import { isEqual } from './utils/dateUtil';
+import { formatValue, isEqual } from './utils/dateUtil';
 import PanelContext from './PanelContext';
 import { DateRender } from './panels/DatePanel/DateBody';
 import { PickerModeMap } from './utils/uiUtil';
@@ -214,6 +214,8 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
 
   const setViewDate = (date: DateType) => {
     setInnerViewDate(date);
+
+    // console.log(11111, (date as any).format('YYYY MM DD'))
     if (onPickerValueChange) {
       onPickerValueChange(date);
     }
@@ -423,6 +425,7 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
         <DatePanel<DateType>
           {...pickerProps}
           onSelect={(date, type) => {
+            setViewDate(date);
             triggerSelect(date, type);
           }}
         />
@@ -444,7 +447,11 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
       break;
 
     case 'dayOnly':
-      panelNode = null;
+      panelNode = (
+        <div className={`${prefixCls}-cell-day`}>
+          {formatValue(mergedValue, { locale, format: 'YYYY MM DD dddd', generateConfig })}
+        </div>
+      )
       break;
 
     default:

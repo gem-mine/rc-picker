@@ -18,6 +18,8 @@ export interface Locale {
   dateSelect: string;
   weekSelect?: string;
   clear: string;
+  day: string;
+  week: string;
   month: string;
   year: string;
   previousMonth: string;
