@@ -55,7 +55,7 @@ function DateBody<DateType>(props: DateBodyProps<DateType>) {
   const mergedMode = mode ?? picker
   // 获取基准的日期 也就是面板上的第一天
   let baseDate = getMonthStartDate(locale.locale, generateConfig, viewDate, firstDayOfMonth);
-  if (mergedMode === 'weekOnly') {
+  if (mergedMode === 'calendarWeek') {
     // 将可视日期的周第一天设为基准日期
     baseDate = generateConfig.setWeekDay(viewDate, 0);
     rowCount = 1
@@ -90,7 +90,7 @@ function DateBody<DateType>(props: DateBodyProps<DateType>) {
     hoverRangedValue: prefixColumn ? null : hoverRangedValue,
     isSameCell: (current, target) => isSameDate(generateConfig, current, target),
     // 月模式下上下个月的置灰，周模式不要有置灰
-    isInView: mergedMode === 'weekOnly' ?
+    isInView: mergedMode === 'calendarWeek' ?
       () => true :
         date => isSameMonth(
           generateConfig,

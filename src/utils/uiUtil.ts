@@ -253,8 +253,8 @@ export const PickerModeMap: Record<PickerMode, ((next: PanelMode) => PanelMode) 
   month: getMonthNextMode,
   quarter: getQuarterNextMode,
   week: getWeekNextMode,
-  weekOnly: null,
-  dayOnly: null,
+  calendarWeek: null,
+  calendarDay: null,
   time: null,
   date: null,
 };
