@@ -81,6 +81,9 @@
   "cnpm": {
     "mode": "npm"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "tnpm": {
     "mode": "npm"
   },
