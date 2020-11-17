@@ -7,6 +7,8 @@ const locale: Locale = {
   backToToday: 'العودة إلى اليوم',
   ok: 'تأكيد',
   clear: 'مسح',
+  day: 'يوم',
+  week: 'أسبوع',
   month: 'الشهر',
   year: 'السنة',
   timeSelect: 'اختيار الوقت',

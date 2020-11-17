@@ -35,7 +35,8 @@ export default () => {
         </div>
         <PickerPanel<Moment>
           locale={zhCN}
-          picker="weekOnly"
+          // picker="weekOnly"
+          picker="dayOnly"
           value={date}
           generateConfig={momentGenerateConfig}
           dateRender={dateRender}
