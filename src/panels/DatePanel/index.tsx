@@ -6,7 +6,7 @@ import { PanelSharedProps } from '../../interface';
 import { WEEK_DAY_COUNT } from '../../utils/dateUtil';
 import { createKeyDownHandler, KeyboardConfig } from '../../utils/uiUtil';
 
-const DATE_ROW_COUNT = 6;
+export const DATE_ROW_COUNT = 6;
 
 export interface DatePanelProps<DateType>
   extends PanelSharedProps<DateType>,

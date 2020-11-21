@@ -14,7 +14,7 @@ import warning from 'rc-util/lib/warning';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import TimePanel, { SharedTimeProps } from './panels/TimePanel';
 import DatetimePanel from './panels/DatetimePanel';
-import DatePanel from './panels/DatePanel';
+import DatePanel, { DATE_ROW_COUNT } from './panels/DatePanel';
 import WeekPanel from './panels/WeekPanel';
 import MonthPanel from './panels/MonthPanel';
 import QuarterPanel from './panels/QuarterPanel';
@@ -39,6 +39,7 @@ import RangeContext from './RangeContext';
 import getExtraFooter from './utils/getExtraFooter';
 import getRanges from './utils/getRanges';
 import { getLowerBoundTime, setTime } from './utils/timeUtil';
+import FullMonthPanel from './panels/FullMonthPanel';
 
 export interface PickerPanelSharedProps<DateType> {
   prefixCls?: string;
@@ -206,6 +207,7 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
   });
 
   // View date control
+
   const [viewDate, setInnerViewDate] = useMergedState<DateType | null, DateType>(null, {
     value: pickerValue,
     defaultValue: defaultPickerValue || mergedValue,
@@ -215,7 +217,6 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
   const setViewDate = (date: DateType) => {
     setInnerViewDate(date);
 
-    // console.log(11111, (date as any).format('YYYY MM DD'))
     if (onPickerValueChange) {
       onPickerValueChange(date);
     }
@@ -397,6 +398,30 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
       );
       break;
 
+    case 'fullMonth':
+      panelNode = (
+        <FullMonthPanel<DateType>
+          {...pickerProps}
+          onSelect={() => {}}
+          monthCellRender={date => {
+            return (
+              <div className={`${prefixCls}-full-month-cell`}>
+                <DatePanel<DateType>
+                  {...pickerProps}
+                  viewDate={date}
+                  // value={date}
+                  onSelect={(date, type) => {
+                    // props.setViewDate(generateConfig.addDate(date, -firstDayOfMonth + 1));
+                    triggerSelect(date, 'mouse');
+                  }}
+                />
+              </div>
+            );
+          }}
+        />
+      );
+      break;
+
     case 'quarter':
       panelNode = (
         <QuarterPanel<DateType>
@@ -451,7 +476,7 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
         <div className={`${prefixCls}-cell-day`}>
           {formatValue(mergedValue, { locale, format: 'YYYY MM DD dddd', generateConfig })}
         </div>
-      )
+      );
       break;
 
     default:
