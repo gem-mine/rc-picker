@@ -51,6 +51,7 @@ export type PanelMode =
   | 'month'
   | 'quarter'
   | 'year'
+  | 'fullMonth'
   | 'decade';
 
 export type PickerMode = Exclude<PanelMode, 'datetime' | 'decade'>;

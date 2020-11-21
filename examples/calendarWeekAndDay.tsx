@@ -24,7 +24,7 @@ function dateRender(date: Moment, today: Moment) {
 
 export default () => {
   const [date, setDate] = React.useState(momentGenerateConfig.getNow());
-  let picker: PickerMode = 'calendarWeek'
+  const picker: PickerMode = 'calendarWeek';
   // let picker: PickerMode = 'calendarDay'
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap' }}>

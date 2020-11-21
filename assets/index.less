@@ -446,4 +446,31 @@
     vertical-align: top;
     transition: margin 0.3s;
   }
+
+  // ==========================  calandar 年模式显示所有日期  =============================
+  &-full-month-panel {
+    .@{prefix-cls}-body {
+      .@{prefix-cls}-full-month-cell {
+        padding: 10px 10px 0 10px;
+      }
+      .@{prefix-cls}-date-panel {
+        .@{prefix-cls}-cell {
+          opacity: 0;
+          pointer-events: none;
+        }
+        .@{prefix-cls}-cell-in-view {
+          opacity: 1;
+          pointer-events: all;
+        }
+      }
+      // 年全显示模式下 隐藏掉不需要的显示
+      .@{prefix-cls}-header-prev-btn,
+      .@{prefix-cls}-header-next-btn,
+      .@{prefix-cls}-header-super-prev-btn,
+      .@{prefix-cls}-header-super-next-btn,
+      .@{prefix-cls}-year-btn {
+        display: none;
+      }
+    }
+  }
 }
