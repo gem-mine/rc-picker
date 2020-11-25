@@ -88,6 +88,9 @@ export interface PickerPanelSharedProps<DateType> {
 
   /** 设置周起始日 */
   firstDayOfMonth?: number;
+
+  /** 是否使用显示全部日期的年面板 */
+  yearMode?: 'simple' | 'complex';
 }
 
 export interface PickerPanelBaseProps<DateType> extends PickerPanelSharedProps<DateType> {
@@ -155,6 +158,7 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
     minuteStep = 1,
     secondStep = 1,
     firstDayOfMonth = 1,
+    yearMode,
   } = props as MergedPickerPanelProps<DateType>;
 
   const needConfirmButton: boolean = (picker === 'date' && !!showTime) || picker === 'time';
@@ -386,40 +390,41 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
       );
       break;
 
-    case 'month':
-      panelNode = (
-        <MonthPanel<DateType>
-          {...pickerProps}
-          onSelect={(date, type) => {
-            setViewDate(date);
-            triggerSelect(date, type);
-          }}
-        />
-      );
-      break;
-
     case 'fullMonth':
-      panelNode = (
-        <FullMonthPanel<DateType>
-          {...pickerProps}
-          onSelect={() => {}}
-          monthCellRender={date => {
-            return (
-              <div className={`${prefixCls}-full-month-cell`}>
-                <DatePanel<DateType>
-                  {...pickerProps}
-                  viewDate={date}
-                  // value={date}
-                  onSelect={(date, type) => {
-                    // props.setViewDate(generateConfig.addDate(date, -firstDayOfMonth + 1));
-                    triggerSelect(date, 'mouse');
-                  }}
-                />
-              </div>
-            );
-          }}
-        />
-      );
+    case 'month':
+      if (mergedMode === 'fullMonth' && yearMode === 'complex') {
+        panelNode = (
+          <FullMonthPanel<DateType>
+            {...pickerProps}
+            onSelect={() => {}}
+            monthCellRender={date => {
+              return (
+                <div className={`${prefixCls}-full-month-cell`}>
+                  <DatePanel<DateType>
+                    {...pickerProps}
+                    viewDate={date}
+                    // value={date}
+                    onSelect={(dDate, type) => {
+                      // props.setViewDate(generateConfig.addDate(date, -firstDayOfMonth + 1));
+                      triggerSelect(dDate, type);
+                    }}
+                  />
+                </div>
+              );
+            }}
+          />
+        );
+      } else {
+        panelNode = (
+          <MonthPanel<DateType>
+            {...pickerProps}
+            onSelect={(date, type) => {
+              setViewDate(date);
+              triggerSelect(date, type);
+            }}
+          />
+        );
+      }
       break;
 
     case 'quarter':
