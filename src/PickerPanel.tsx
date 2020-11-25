@@ -14,7 +14,7 @@ import warning from 'rc-util/lib/warning';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import TimePanel, { SharedTimeProps } from './panels/TimePanel';
 import DatetimePanel from './panels/DatetimePanel';
-import DatePanel, { DATE_ROW_COUNT } from './panels/DatePanel';
+import DatePanel  from './panels/DatePanel';
 import WeekPanel from './panels/WeekPanel';
 import MonthPanel from './panels/MonthPanel';
 import QuarterPanel from './panels/QuarterPanel';
