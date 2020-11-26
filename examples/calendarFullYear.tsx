@@ -13,6 +13,7 @@ export default () => {
         picker="fullMonth"
         mode="fullMonth"
         // value={momentGenerateConfig.getNow()}
+        // firstDayOfMonth={21}
         generateConfig={momentGenerateConfig}
       />
     </div>

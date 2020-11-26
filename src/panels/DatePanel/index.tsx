@@ -2,7 +2,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import DateBody, { DateBodyPassProps, DateRender } from './DateBody';
 import DateHeader from './DateHeader';
-import { PanelSharedProps } from '../../interface';
+import { PanelMode, PanelSharedProps } from '../../interface';
 import { WEEK_DAY_COUNT } from '../../utils/dateUtil';
 import { createKeyDownHandler, KeyboardConfig } from '../../utils/uiUtil';
 
@@ -17,6 +17,7 @@ export interface DatePanelProps<DateType>
   // Used for week panel
   panelName?: string;
   keyboardConfig?: KeyboardConfig;
+  mergedMode?: PanelMode
 }
 
 function DatePanel<DateType>(props: DatePanelProps<DateType>) {

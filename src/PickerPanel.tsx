@@ -405,17 +405,16 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
           onSelect={() => {}}
           monthCellRender={date => {
             return (
-              <div className={`${prefixCls}-full-month-cell`}>
-                <DatePanel<DateType>
-                  {...pickerProps}
-                  viewDate={date}
-                  // value={date}
-                  onSelect={(dDate, type) => {
-                    // props.setViewDate(generateConfig.addDate(date, -firstDayOfMonth + 1));
-                    triggerSelect(dDate, type);
-                  }}
-                />
-              </div>
+              <DatePanel<DateType>
+                {...pickerProps}
+                viewDate={date}
+                mergedMode={mergedMode}
+                // value={date}
+                onSelect={(dDate, type) => {
+                  // props.setViewDate(generateConfig.addDate(date, -firstDayOfMonth + 1));
+                  triggerSelect(dDate, type);
+                }}
+              />
             );
           }}
         />
