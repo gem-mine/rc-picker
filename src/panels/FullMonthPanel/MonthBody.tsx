@@ -27,15 +27,17 @@ function MonthBody<DateType>(props: MonthBodyProps<DateType>) {
 
   const { rangedValue, hoverRangedValue } = React.useContext(RangeContext);
 
-  const cellPrefixCls = `${prefixCls}-cell`;
+  const cellPrefixCls = `${prefixCls}-full-month`;
 
   const getCellClassName = useCellClassName({
-    cellPrefixCls,
+    cellPrefixCls: `${cellPrefixCls}-cell`,
     value,
     generateConfig,
     rangedValue,
     hoverRangedValue,
-    isSameCell: (current, target) => isSameMonth(generateConfig, current, target),
+    // 移除掉，否则 hover 在月份上会高亮
+    // isSameCell: (current, target) => isSameMonth(generateConfig, current, target),
+    isSameCell: () => false,
     isInView: () => true,
     offsetCell: (date, offset) => generateConfig.addMonth(date, offset),
   });
@@ -55,6 +57,7 @@ function MonthBody<DateType>(props: MonthBodyProps<DateType>) {
   return (
     <PanelBody
       {...props}
+      prefixCls={cellPrefixCls}
       rowNum={MONTH_ROW_COUNT}
       colNum={MONTH_COL_COUNT}
       baseDate={baseMonth}
