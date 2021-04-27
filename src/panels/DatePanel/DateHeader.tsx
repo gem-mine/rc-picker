@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Header from '../Header';
-import { Locale } from '../../interface';
+import { Locale, PanelMode } from '../../interface';
 import { GenerateConfig } from '../../generate';
 import PanelContext from '../../PanelContext';
 import { formatValue } from '../../utils/dateUtil';
@@ -11,6 +11,7 @@ export interface DateHeaderProps<DateType> {
   value?: DateType | null;
   locale: Locale;
   generateConfig: GenerateConfig<DateType>;
+  mergedMode?: PanelMode
 
   onPrevYear: () => void;
   onNextYear: () => void;
@@ -32,10 +33,11 @@ function DateHeader<DateType>(props: DateHeaderProps<DateType>) {
     onPrevYear,
     onYearClick,
     onMonthClick,
+    mergedMode,
   } = props;
 
   const { hideHeader } = React.useContext(PanelContext);
-  if (hideHeader) {
+  if (hideHeader && mergedMode !== 'fullMonth') {
     return null;
   }
 
