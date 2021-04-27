@@ -88,6 +88,9 @@ export interface PickerSharedProps<DateType> extends React.AriaAttributes {
 
   autoComplete?: string;
   direction?: 'ltr' | 'rtl';
+
+  /** 兼容 v3 renderSidebar, v4 建议使用 panelRender 代替 */
+  renderSidebar?: () => React.ReactNode;
 }
 
 type OmitPanelProps<Props> = Omit<
@@ -172,6 +175,7 @@ function InnerPicker<DateType>(props: PickerProps<DateType>) {
     onClick,
     direction,
     autoComplete = 'off',
+    renderSidebar,
   } = props as MergedPickerProps<DateType>;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -383,6 +387,15 @@ function InnerPicker<DateType>(props: PickerProps<DateType>) {
 
   if (panelRender) {
     panelNode = panelRender(panelNode);
+  }
+
+  if (renderSidebar) {
+    panelNode = (
+      <>
+        {renderSidebar()}
+        {panelNode}
+      </>
+    );
   }
 
   const panel = (

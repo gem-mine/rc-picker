@@ -108,6 +108,9 @@ export interface RangePickerSharedProps<DateType> {
   activePickerIndex?: 0 | 1;
   dateRender?: RangeDateRender<DateType>;
   panelRender?: (originPanel: React.ReactNode) => React.ReactNode;
+
+  /** 兼容 v3 renderSidebar, v4 建议使用 panelRender 代替 */
+  renderSidebar?: () => React.ReactNode;
 }
 
 type OmitPickerProps<Props> = Omit<
@@ -215,6 +218,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     direction,
     activePickerIndex,
     autoComplete = 'off',
+    renderSidebar,
   } = props as MergedRangePickerProps<DateType>;
 
   const needConfirmButton: boolean = (picker === 'date' && !!showTime) || picker === 'time';
@@ -937,6 +941,15 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
 
     if (panelRender) {
       mergedNodes = panelRender(mergedNodes);
+    }
+
+    if (renderSidebar) {
+      mergedNodes = (
+        <>
+          {renderSidebar()}
+          {mergedNodes}
+        </>
+      );
     }
 
     return (
