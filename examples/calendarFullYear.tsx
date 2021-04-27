@@ -12,8 +12,8 @@ export default () => {
         locale={zhCN}
         picker="fullMonth"
         mode="fullMonth"
+        yearMode="complex"
         // value={momentGenerateConfig.getNow()}
-        // firstDayOfMonth={21}
         generateConfig={momentGenerateConfig}
       />
     </div>
