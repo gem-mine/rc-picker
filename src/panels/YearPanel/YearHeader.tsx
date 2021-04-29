@@ -9,6 +9,7 @@ export interface YearHeaderProps<DateType> {
   viewDate: DateType;
   value?: DateType | null;
   generateConfig: GenerateConfig<DateType>;
+  hideDecade?: boolean;
 
   onPrevDecade: () => void;
   onNextDecade: () => void;
@@ -16,7 +17,15 @@ export interface YearHeaderProps<DateType> {
 }
 
 function YearHeader<DateType>(props: YearHeaderProps<DateType>) {
-  const { prefixCls, generateConfig, viewDate, onPrevDecade, onNextDecade, onDecadeClick } = props;
+  const {
+    prefixCls,
+    generateConfig,
+    viewDate,
+    onPrevDecade,
+    onNextDecade,
+    onDecadeClick,
+    hideDecade,
+  } = props;
   const { hideHeader } = React.useContext(PanelContext);
   if (hideHeader) {
     return null;
@@ -35,7 +44,11 @@ function YearHeader<DateType>(props: YearHeaderProps<DateType>) {
       onSuperPrev={onPrevDecade}
       onSuperNext={onNextDecade}
     >
-      <button type="button" onClick={onDecadeClick} className={`${prefixCls}-decade-btn`}>
+      <button
+        type="button"
+        onClick={hideDecade ? null : onDecadeClick}
+        className={`${prefixCls}-decade-btn`}
+      >
         {startYear}-{endYear}
       </button>
     </Header>
