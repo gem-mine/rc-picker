@@ -24,8 +24,8 @@ describe('Picker.Components', () => {
   ].forEach(({ name, component, ranges }) => {
     it(name, () => {
       const Component = component as any;
-      const Button: React.FC<any> = props => <h1 {...props} />;
-      const Item: React.FC<any> = props => <h2 {...props} />;
+      const Button: React.FC<any> = (props) => <h1 {...props} />;
+      const Item: React.FC<any> = (props) => <h2 {...props} />;
 
       const wrapper = mount(
         <Component

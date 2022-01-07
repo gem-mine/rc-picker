@@ -2,7 +2,8 @@ import React from 'react';
 import MockDate from 'mockdate';
 import { act } from 'react-dom/test-utils';
 import KeyCode from 'rc-util/lib/KeyCode';
-import type { Wrapper } from './util/commonUtil';
+import type {
+  Wrapper} from './util/commonUtil';
 import {
   mount,
   getMoment,

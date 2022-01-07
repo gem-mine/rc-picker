@@ -4,6 +4,7 @@ import { act } from 'react-dom/test-utils';
 import { spyElementPrototypes } from 'rc-util/lib/test/domHook';
 import KeyCode from 'rc-util/lib/KeyCode';
 import { resetWarned } from 'rc-util/lib/warning';
+import moment from 'moment';
 import type { Moment } from 'moment';
 import type { PanelMode, PickerMode } from '../src/interface';
 import { mount, getMoment, isSame, MomentPicker } from './util/commonUtil';
@@ -955,5 +956,14 @@ describe('Picker.Basic', () => {
         expect(cell.hasClass('rc-picker-cell-disabled')).toBeTruthy();
       }
     });
+  });
+
+  it('disabledDate should not crash', () => {
+    const wrapper = mount(<MomentPicker open disabledDate={(d) => d.isAfter(Date.now())} />);
+    wrapper
+      .find('input')
+      .simulate('change', { target: { value: moment().add(1, 'year').format('YYYY-MM-DD') } });
+
+    wrapper.find('input').simulate('keyDown', { which: KeyCode.ENTER });
   });
 });

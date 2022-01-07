@@ -191,6 +191,7 @@ function InnerPicker<DateType>(props: PickerProps<DateType>) {
   // Panel ref
   const panelDivRef = React.useRef<HTMLDivElement>(null);
   const inputDivRef = React.useRef<HTMLDivElement>(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
   // Real value
   const [mergedValue, setInnerValue] = useMergedState(null, {
@@ -299,9 +300,17 @@ function InnerPicker<DateType>(props: PickerProps<DateType>) {
     triggerOpen,
     forwardKeyDown,
     isClickOutside: (target) =>
-      !elementsContains([panelDivRef.current, inputDivRef.current], target as HTMLElement),
+      !elementsContains(
+        [panelDivRef.current, inputDivRef.current, containerRef.current],
+        target as HTMLElement,
+      ),
     onSubmit: () => {
-      if (disabledDate && disabledDate(selectedValue)) {
+      if (
+        // When user typing disabledDate with keyboard and enter, this value will be empty
+        !selectedValue ||
+        // Normal disabled check
+        (disabledDate && disabledDate(selectedValue))
+      ) {
         return false;
       }
 
@@ -449,6 +458,7 @@ function InnerPicker<DateType>(props: PickerProps<DateType>) {
           triggerOpen(false);
         }}
         className={`${prefixCls}-clear`}
+        role="button"
       >
         {clearIcon || <span className={`${prefixCls}-clear-btn`} />}
       </span>
@@ -499,6 +509,7 @@ function InnerPicker<DateType>(props: PickerProps<DateType>) {
         direction={direction}
       >
         <div
+          ref={containerRef}
           className={classNames(prefixCls, className, {
             [`${prefixCls}-disabled`]: disabled,
             [`${prefixCls}-focused`]: focused,

@@ -22,7 +22,7 @@ export default function useTextValueMapping({
   }
 
   React.useEffect(() => {
-    if (valueTexts.every(valText => valText !== text)) {
+    if (valueTexts.every((valText) => valText !== text)) {
       resetText();
     }
   }, [valueTexts.join('||')]);

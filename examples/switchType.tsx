@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Moment } from 'moment';
+import type { Moment } from 'moment';
 import Picker from '../src/Picker';
 import momentGenerateConfig from '../src/generate/moment';
 import zhCN from '../src/locale/zh_CN';
@@ -20,7 +20,7 @@ export default function SwitchablePicker() {
     <>
       <select
         value={type}
-        onChange={event => {
+        onChange={(event) => {
           setType(event.target.value);
         }}
       >
@@ -30,7 +30,7 @@ export default function SwitchablePicker() {
         <option value="quarter">Quarter</option>
         <option value="year">Year</option>
       </select>
-      <PickerWithType type={type} onChange={value => console.log(value)} />
+      <PickerWithType type={type} onChange={(value) => console.log(value)} />
     </>
   );
 }

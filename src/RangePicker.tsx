@@ -102,6 +102,8 @@ export type RangePickerSharedProps<DateType> = {
   onPanelChange?: (values: RangeValue<DateType>, modes: [PanelMode, PanelMode]) => void;
   onFocus?: React.FocusEventHandler<HTMLInputElement>;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
+  onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
   onOk?: (dates: RangeValue<DateType>) => void;
   direction?: 'ltr' | 'rtl';
   autoComplete?: string;
@@ -210,6 +212,8 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     onCalendarChange,
     onFocus,
     onBlur,
+    onMouseEnter,
+    onMouseLeave,
     onOk,
     onKeyDown,
     components,
@@ -585,7 +589,12 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     onBlur,
     isClickOutside: (target: EventTarget | null) =>
       !elementsContains(
-        [panelDivRef.current, startInputDivRef.current, endInputDivRef.current],
+        [
+          panelDivRef.current,
+          startInputDivRef.current,
+          endInputDivRef.current,
+          containerRef.current,
+        ],
         target as HTMLElement,
       ),
     onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
@@ -843,7 +852,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
           defaultValue={
             mergedActivePickerIndex === 0 ? getValue(selectedValue, 1) : getValue(selectedValue, 0)
           }
-          defaultPickerValue={undefined}
+          // defaultPickerValue={undefined}
         />
       </RangeContext.Provider>
     );
@@ -1093,6 +1102,8 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
           })}
           style={style}
           onClick={onPickerClick}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
           onMouseDown={onPickerMouseDown}
           {...getDataOrAriaProps(props)}
         >
