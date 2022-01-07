@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { RangeValue, PickerMode, Locale } from '../interface';
+import type { RangeValue, PickerMode, Locale } from '../interface';
 import { getValue } from '../utils/miscUtil';
-import { GenerateConfig } from '../generate';
+import type { GenerateConfig } from '../generate';
 import { isSameDate, getQuarter } from '../utils/dateUtil';
 
 export default function useRangeDisabled<DateType>(
@@ -26,10 +26,8 @@ export default function useRangeDisabled<DateType>(
   const startDate = getValue(selectedValue, 0);
   const endDate = getValue(selectedValue, 1);
 
-  function weekNumber(date: DateType) {
-    const year = generateConfig.getYear(date);
-    const week = generateConfig.locale.getWeek(locale.locale, date);
-    return year * 100 + week;
+  function weekFirstDate(date: DateType) {
+    return generateConfig.locale.getWeekFirstDate(locale.locale, date);
   }
 
   function monthNumber(date: DateType) {
@@ -63,7 +61,7 @@ export default function useRangeDisabled<DateType>(
           case 'month':
             return monthNumber(date) > monthNumber(endDate);
           case 'week':
-            return weekNumber(date) > weekNumber(endDate);
+            return weekFirstDate(date) > weekFirstDate(endDate);
           default:
             return (
               !isSameDate(generateConfig, date, endDate) && generateConfig.isAfter(date, endDate)
@@ -97,7 +95,7 @@ export default function useRangeDisabled<DateType>(
           case 'month':
             return monthNumber(date) < monthNumber(startDate);
           case 'week':
-            return weekNumber(date) < weekNumber(startDate);
+            return weekFirstDate(date) < weekFirstDate(startDate);
           default:
             return (
               !isSameDate(generateConfig, date, startDate) &&

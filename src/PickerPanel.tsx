@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
-
 /**
  * Logic:
  *  When `mode` === `picker`,
@@ -12,7 +10,8 @@ import classNames from 'classnames';
 import KeyCode from 'rc-util/lib/KeyCode';
 import warning from 'rc-util/lib/warning';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
-import TimePanel, { SharedTimeProps } from './panels/TimePanel';
+import type { SharedTimeProps } from './panels/TimePanel';
+import TimePanel from './panels/TimePanel';
 import DatetimePanel from './panels/DatetimePanel';
 import DatePanel from './panels/DatePanel';
 import WeekPanel from './panels/WeekPanel';
@@ -20,8 +19,8 @@ import MonthPanel from './panels/MonthPanel';
 import QuarterPanel from './panels/QuarterPanel';
 import YearPanel from './panels/YearPanel';
 import DecadePanel from './panels/DecadePanel';
-import { GenerateConfig } from './generate';
-import {
+import type { GenerateConfig } from './generate';
+import type {
   Locale,
   PanelMode,
   PanelRefProps,
@@ -32,16 +31,16 @@ import {
 } from './interface';
 import { formatValue, isEqual } from './utils/dateUtil';
 import PanelContext from './PanelContext';
-import { DateRender } from './panels/DatePanel/DateBody';
+import type { DateRender } from './panels/DatePanel/DateBody';
 import { PickerModeMap } from './utils/uiUtil';
-import { MonthCellRender } from './panels/MonthPanel/MonthBody';
+import type { MonthCellRender } from './panels/MonthPanel/MonthBody';
 import RangeContext from './RangeContext';
 import getExtraFooter from './utils/getExtraFooter';
 import getRanges from './utils/getRanges';
-import { getLowerBoundTime, setTime } from './utils/timeUtil';
+import { getLowerBoundTime, setDateTime, setTime } from './utils/timeUtil';
 import FullMonthPanel from './panels/FullMonthPanel';
 
-export interface PickerPanelSharedProps<DateType> {
+export type PickerPanelSharedProps<DateType> = {
   prefixCls?: string;
   className?: string;
   style?: React.CSSProperties;
@@ -51,6 +50,7 @@ export interface PickerPanelSharedProps<DateType> {
 
   // Locale
   locale: Locale;
+  localeCode?: string;
   generateConfig: GenerateConfig<DateType>;
 
   // Value
@@ -88,13 +88,13 @@ export interface PickerPanelSharedProps<DateType> {
 
   /** 设置周起始日 */
   firstDayOfMonth?: number;
-}
+};
 
-export interface PickerPanelBaseProps<DateType> extends PickerPanelSharedProps<DateType> {
+export type PickerPanelBaseProps<DateType> = {
   picker: Exclude<PickerMode, 'date' | 'time'>;
-}
+} & PickerPanelSharedProps<DateType>;
 
-export interface PickerPanelDateProps<DateType> extends PickerPanelSharedProps<DateType> {
+export type PickerPanelDateProps<DateType> = {
   picker?: 'date';
   showToday?: boolean;
   showNow?: boolean;
@@ -102,13 +102,12 @@ export interface PickerPanelDateProps<DateType> extends PickerPanelSharedProps<D
   // Time
   showTime?: boolean | SharedTimeProps<DateType>;
   disabledTime?: DisabledTime<DateType>;
-}
+} & PickerPanelSharedProps<DateType>;
 
-export interface PickerPanelTimeProps<DateType>
-  extends PickerPanelSharedProps<DateType>,
-    SharedTimeProps<DateType> {
+export type PickerPanelTimeProps<DateType> = {
   picker: 'time';
-}
+} & PickerPanelSharedProps<DateType> &
+  SharedTimeProps<DateType>;
 
 export type PickerPanelProps<DateType> =
   | PickerPanelBaseProps<DateType>
@@ -119,9 +118,9 @@ export type PickerPanelProps<DateType> =
 type OmitType<DateType> = Omit<PickerPanelBaseProps<DateType>, 'picker'> &
   Omit<PickerPanelDateProps<DateType>, 'picker'> &
   Omit<PickerPanelTimeProps<DateType>, 'picker'>;
-interface MergedPickerPanelProps<DateType> extends OmitType<DateType> {
+type MergedPickerPanelProps<DateType> = {
   picker?: PickerMode;
-}
+} & OmitType<DateType>;
 
 function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
   const {
@@ -198,7 +197,7 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
   const [mergedValue, setInnerValue] = useMergedState(null, {
     value,
     defaultValue,
-    postState: val => {
+    postState: (val) => {
       if (!val && defaultOpenValue && picker === 'time') {
         return defaultOpenValue;
       }
@@ -207,16 +206,28 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
   });
 
   // View date control
-
   const [viewDate, setInnerViewDate] = useMergedState<DateType | null, DateType>(null, {
     value: pickerValue,
     defaultValue: defaultPickerValue || mergedValue,
-    postState: date => date || generateConfig.getNow(),
+    postState: (date) => {
+      const now = generateConfig.getNow();
+      if (!date) return now;
+      // When value is null and set showTime
+      if (!mergedValue && showTime) {
+        if (typeof showTime === 'object') {
+          return setDateTime(generateConfig, date, showTime.defaultValue || now);
+        }
+        if (defaultValue) {
+          return setDateTime(generateConfig, date, defaultValue);
+        }
+        return setDateTime(generateConfig, date, now);
+      }
+      return date;
+    },
   });
 
   const setViewDate = (date: DateType) => {
     setInnerViewDate(date);
-
     if (onPickerValueChange) {
       onPickerValueChange(date);
     }
@@ -278,7 +289,7 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
         onContextSelect(date, type);
       }
 
-      if (onChange && !isEqual(generateConfig, date, mergedValue)) {
+      if (onChange && !isEqual(generateConfig, date, mergedValue) && !disabledDate?.(date)) {
         onChange(date);
       }
     }
@@ -315,7 +326,7 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
     /* eslint-enable no-lone-blocks */
   };
 
-  const onInternalBlur: React.FocusEventHandler<HTMLElement> = e => {
+  const onInternalBlur: React.FocusEventHandler<HTMLElement> = (e) => {
     if (panelRef.current && panelRef.current.onBlur) {
       panelRef.current.onBlur(e);
     }
@@ -352,11 +363,12 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
     operationRef: panelRef,
     prefixCls,
     viewDate,
+    mode: mergedMode,
     value: mergedValue,
     onViewDateChange: setViewDate,
     sourceMode,
     onPanelChange: onInternalPanelChange,
-    disabledDate: mergedMode !== 'decade' ? disabledDate : undefined,
+    disabledDate,
   };
   delete pickerProps.onChange;
   delete pickerProps.onSelect;
@@ -403,7 +415,7 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
         <FullMonthPanel<DateType>
           {...pickerProps}
           onSelect={() => {}}
-          monthCellRender={date => {
+          monthCellRender={(date) => {
             return (
               <DatePanel<DateType>
                 {...pickerProps}
@@ -572,6 +584,7 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
     <PanelContext.Provider
       value={{
         ...panelContext,
+        mode: mergedMode,
         hideHeader: 'hideHeader' in props ? hideHeader : panelContext.hideHeader,
         hidePrevBtn: inRange && panelPosition === 'right',
         hideNextBtn: inRange && panelPosition === 'left',

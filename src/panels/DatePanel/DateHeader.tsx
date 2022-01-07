@@ -1,17 +1,19 @@
 import * as React from 'react';
+import wareki from 'wareki';
 import Header from '../Header';
-import { Locale, PanelMode } from '../../interface';
-import { GenerateConfig } from '../../generate';
+import type { Locale, PanelMode } from '../../interface';
+import type { GenerateConfig } from '../../generate';
 import PanelContext from '../../PanelContext';
 import { formatValue } from '../../utils/dateUtil';
 
-export interface DateHeaderProps<DateType> {
+export type DateHeaderProps<DateType> = {
   prefixCls: string;
   viewDate: DateType;
   value?: DateType | null;
   locale: Locale;
+  localeCode?: string;
   generateConfig: GenerateConfig<DateType>;
-  mergedMode?: PanelMode
+  mergedMode?: PanelMode;
 
   onPrevYear: () => void;
   onNextYear: () => void;
@@ -19,13 +21,14 @@ export interface DateHeaderProps<DateType> {
   onNextMonth: () => void;
   onYearClick: () => void;
   onMonthClick: () => void;
-}
+};
 
 function DateHeader<DateType>(props: DateHeaderProps<DateType>) {
   const {
     prefixCls,
     generateConfig,
     locale,
+    localeCode,
     viewDate,
     onNextMonth,
     onPrevMonth,
@@ -51,6 +54,8 @@ function DateHeader<DateType>(props: DateHeaderProps<DateType>) {
 
   const month = generateConfig.getMonth(viewDate);
 
+  const isJa = localeCode === 'ja';
+
   // =================== Month & Year ===================
   const yearNode: React.ReactNode = (
     <button
@@ -62,7 +67,12 @@ function DateHeader<DateType>(props: DateHeaderProps<DateType>) {
     >
       {formatValue(viewDate, {
         locale,
-        format: locale.yearFormat,
+        format: isJa
+          ? (value) =>
+              wareki(String(generateConfig.getYear(value)), {
+                unit: true,
+              })
+          : locale.yearFormat,
         generateConfig,
       })}
     </button>

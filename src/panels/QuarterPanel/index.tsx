@@ -1,10 +1,10 @@
 import * as React from 'react';
 import QuarterHeader from './QuarterHeader';
 import QuarterBody from './QuarterBody';
-import { PanelSharedProps } from '../../interface';
+import type { PanelSharedProps } from '../../interface';
 import { createKeyDownHandler } from '../../utils/uiUtil';
 
-export interface QuarterPanelProps<DateType> extends PanelSharedProps<DateType> {}
+export type QuarterPanelProps<DateType> = {} & PanelSharedProps<DateType>;
 
 function QuarterPanel<DateType>(props: QuarterPanelProps<DateType>) {
   const {
@@ -22,15 +22,15 @@ function QuarterPanel<DateType>(props: QuarterPanelProps<DateType>) {
 
   // ======================= Keyboard =======================
   operationRef.current = {
-    onKeyDown: event =>
+    onKeyDown: (event) =>
       createKeyDownHandler(event, {
-        onLeftRight: diff => {
+        onLeftRight: (diff) => {
           onSelect(generateConfig.addMonth(value || viewDate, diff * 3), 'key');
         },
-        onCtrlLeftRight: diff => {
+        onCtrlLeftRight: (diff) => {
           onSelect(generateConfig.addYear(value || viewDate, diff), 'key');
         },
-        onUpDown: diff => {
+        onUpDown: (diff) => {
           onSelect(generateConfig.addYear(value || viewDate, diff), 'key');
         },
       }),
@@ -61,7 +61,7 @@ function QuarterPanel<DateType>(props: QuarterPanelProps<DateType>) {
       <QuarterBody<DateType>
         {...props}
         prefixCls={prefixCls}
-        onSelect={date => {
+        onSelect={(date) => {
           onSelect(date, 'mouse');
         }}
       />

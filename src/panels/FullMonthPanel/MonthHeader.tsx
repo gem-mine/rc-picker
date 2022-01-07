@@ -1,7 +1,8 @@
 import * as React from 'react';
+import wareki from 'wareki';
 import Header from '../Header';
-import { Locale } from '../../interface';
-import { GenerateConfig } from '../../generate';
+import type { Locale } from '../../interface';
+import type { GenerateConfig } from '../../generate';
 import PanelContext from '../../PanelContext';
 import { formatValue } from '../../utils/dateUtil';
 
@@ -9,6 +10,7 @@ export interface MonthHeaderProps<DateType> {
   prefixCls: string;
   viewDate: DateType;
   locale: Locale;
+  localeCode?: string;
   generateConfig: GenerateConfig<DateType>;
 
   onPrevYear: () => void;
@@ -25,6 +27,7 @@ function MonthHeader<DateType>(props: MonthHeaderProps<DateType>) {
     onNextYear,
     onPrevYear,
     onYearClick,
+    localeCode,
   } = props;
   const { hideHeader } = React.useContext(PanelContext);
   if (hideHeader) {
@@ -32,6 +35,7 @@ function MonthHeader<DateType>(props: MonthHeaderProps<DateType>) {
   }
 
   const headerPrefixCls = `${prefixCls}-header`;
+  const isJa = localeCode === 'ja';
 
   return (
     <Header
@@ -43,7 +47,12 @@ function MonthHeader<DateType>(props: MonthHeaderProps<DateType>) {
       <button type="button" onClick={onYearClick} className={`${prefixCls}-year-btn`}>
         {formatValue(viewDate, {
           locale,
-          format: locale.yearFormat,
+          format: isJa
+            ? (value) =>
+                wareki(String(generateConfig.getYear(value)), {
+                  unit: true,
+                })
+            : locale.yearFormat,
           generateConfig,
         })}
       </button>

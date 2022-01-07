@@ -1,10 +1,11 @@
 import React from 'react';
-import { Moment } from 'moment';
+import type { Moment } from 'moment';
 import Picker from '../src/Picker';
 import PickerPanel from '../src/PickerPanel';
 import momentGenerateConfig from '../src/generate/moment';
 import zhCN from '../src/locale/zh_CN';
 import '../assets/index.less';
+import './calendar.less';
 
 function dateRender(date: Moment, today: Moment) {
   return (
@@ -21,6 +22,12 @@ function dateRender(date: Moment, today: Moment) {
   );
 }
 
+const disabledProps = {
+  disabledDate: (date) => date.date() === 10,
+  onSelect: (d) => console.log('Select:', d.format('YYYY-MM-DD')),
+  onChange: (d) => console.log('Change:', d.format('YYYY-MM-DD')),
+};
+
 export default () => (
   <div style={{ display: 'flex', flexWrap: 'wrap' }}>
     <div>
@@ -29,6 +36,7 @@ export default () => (
         // picker="month"
         generateConfig={momentGenerateConfig}
         dateRender={dateRender}
+        {...disabledProps}
       />
     </div>
     <div>
@@ -36,6 +44,7 @@ export default () => (
         locale={zhCN}
         generateConfig={momentGenerateConfig}
         dateRender={dateRender}
+        {...disabledProps}
       />
     </div>
   </div>

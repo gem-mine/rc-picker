@@ -1,4 +1,4 @@
-export interface GenerateConfig<DateType> {
+export type GenerateConfig<DateType> = {
   // Get
   getWeekDay: (value: DateType) => number;
   getSecond: (value: DateType) => number;
@@ -8,6 +8,8 @@ export interface GenerateConfig<DateType> {
   getMonth: (value: DateType) => number;
   getYear: (value: DateType) => number;
   getNow: () => DateType;
+  getFixedDate: (fixed: string) => DateType;
+  getEndDate: (value: DateType) => DateType;
 
   // Set
   addYear: (value: DateType, diff: number) => DateType;
@@ -29,6 +31,7 @@ export interface GenerateConfig<DateType> {
 
   locale: {
     getWeekFirstDay: (locale: string) => number;
+    getWeekFirstDate: (locale: string, value: DateType) => DateType;
     getWeek: (locale: string, value: DateType) => number;
 
     format: (locale: string, date: DateType, format: string) => string;
@@ -41,4 +44,4 @@ export interface GenerateConfig<DateType> {
     /** A proxy for getting locale with moment or other locale library */
     getShortMonths?: (locale: string) => string[];
   };
-}
+};

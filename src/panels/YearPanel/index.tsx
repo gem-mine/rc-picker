@@ -1,12 +1,12 @@
 import * as React from 'react';
 import YearHeader from './YearHeader';
 import YearBody, { YEAR_COL_COUNT } from './YearBody';
-import { PanelSharedProps, PanelMode } from '../../interface';
+import type { PanelSharedProps, PanelMode } from '../../interface';
 import { createKeyDownHandler } from '../../utils/uiUtil';
 
-export interface YearPanelProps<DateType> extends PanelSharedProps<DateType> {
+export type YearPanelProps<DateType> = {
   sourceMode: PanelMode;
-}
+} & PanelSharedProps<DateType>;
 
 export const YEAR_DECADE_COUNT = 10;
 
@@ -27,28 +27,19 @@ function YearPanel<DateType>(props: YearPanelProps<DateType>) {
 
   // ======================= Keyboard =======================
   operationRef.current = {
-    onKeyDown: event =>
+    onKeyDown: (event) =>
       createKeyDownHandler(event, {
-        onLeftRight: diff => {
+        onLeftRight: (diff) => {
           onSelect(generateConfig.addYear(value || viewDate, diff), 'key');
         },
-        onCtrlLeftRight: diff => {
-          onSelect(
-            generateConfig.addYear(value || viewDate, diff * YEAR_DECADE_COUNT),
-            'key',
-          );
+        onCtrlLeftRight: (diff) => {
+          onSelect(generateConfig.addYear(value || viewDate, diff * YEAR_DECADE_COUNT), 'key');
         },
-        onUpDown: diff => {
-          onSelect(
-            generateConfig.addYear(value || viewDate, diff * YEAR_COL_COUNT),
-            'key',
-          );
+        onUpDown: (diff) => {
+          onSelect(generateConfig.addYear(value || viewDate, diff * YEAR_COL_COUNT), 'key');
         },
         onEnter: () => {
-          onPanelChange(
-            sourceMode === 'date' ? 'date' : 'month',
-            value || viewDate,
-          );
+          onPanelChange(sourceMode === 'date' ? 'date' : 'month', value || viewDate);
         },
       }),
   };
@@ -78,7 +69,7 @@ function YearPanel<DateType>(props: YearPanelProps<DateType>) {
       <YearBody
         {...props}
         prefixCls={prefixCls}
-        onSelect={date => {
+        onSelect={(date) => {
           onPanelChange(sourceMode === 'date' ? 'date' : 'month', date);
           onSelect(date, 'mouse');
         }}
