@@ -1,5 +1,5 @@
 import React from 'react';
-import { Moment } from 'moment';
+import type { Moment } from 'moment';
 import momentGenerateConfig from '../src/generate/moment';
 import zhCN from '../src/locale/zh_CN';
 import '../assets/index.less';
@@ -14,7 +14,7 @@ export default () => (
         locale={zhCN}
         picker="week"
         allowClear
-        onOpenChange={open => {
+        onOpenChange={(open) => {
           console.log('1 =>', open);
         }}
       />
@@ -24,7 +24,7 @@ export default () => (
         picker="week"
         allowClear
         open
-        onOpenChange={open => {
+        onOpenChange={(open) => {
           console.log('2 =>', open);
         }}
       />
@@ -34,7 +34,7 @@ export default () => (
         picker="week"
         allowClear
         // open
-        onOpenChange={open => {
+        onOpenChange={(open) => {
           console.log('3 =>', open);
         }}
       />

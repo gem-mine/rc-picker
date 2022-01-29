@@ -1,12 +1,13 @@
 import * as React from 'react';
 import MonthHeader from './MonthHeader';
-import MonthBody, { MONTH_COL_COUNT, MonthCellRender } from './MonthBody';
-import { PanelSharedProps } from '../../interface';
+import type { MonthCellRender } from './MonthBody';
+import MonthBody, { MONTH_COL_COUNT } from './MonthBody';
+import type { PanelSharedProps } from '../../interface';
 import { createKeyDownHandler } from '../../utils/uiUtil';
 
-export interface MonthPanelProps<DateType> extends PanelSharedProps<DateType> {
+export type MonthPanelProps<DateType> = {
   monthCellContentRender?: MonthCellRender<DateType>;
-}
+} & PanelSharedProps<DateType>;
 
 function MonthPanel<DateType>(props: MonthPanelProps<DateType>) {
   const {
@@ -24,19 +25,16 @@ function MonthPanel<DateType>(props: MonthPanelProps<DateType>) {
 
   // ======================= Keyboard =======================
   operationRef.current = {
-    onKeyDown: event =>
+    onKeyDown: (event) =>
       createKeyDownHandler(event, {
-        onLeftRight: diff => {
+        onLeftRight: (diff) => {
           onSelect(generateConfig.addMonth(value || viewDate, diff), 'key');
         },
-        onCtrlLeftRight: diff => {
+        onCtrlLeftRight: (diff) => {
           onSelect(generateConfig.addYear(value || viewDate, diff), 'key');
         },
-        onUpDown: diff => {
-          onSelect(
-            generateConfig.addMonth(value || viewDate, diff * MONTH_COL_COUNT),
-            'key',
-          );
+        onUpDown: (diff) => {
+          onSelect(generateConfig.addMonth(value || viewDate, diff * MONTH_COL_COUNT), 'key');
         },
         onEnter: () => {
           onPanelChange('date', value || viewDate);
@@ -69,7 +67,7 @@ function MonthPanel<DateType>(props: MonthPanelProps<DateType>) {
       <MonthBody<DateType>
         {...props}
         prefixCls={prefixCls}
-        onSelect={date => {
+        onSelect={(date) => {
           onSelect(date, 'mouse');
           onPanelChange('date', date);
         }}

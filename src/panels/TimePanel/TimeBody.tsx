@@ -1,10 +1,11 @@
 import * as React from 'react';
 import useMemo from 'rc-util/lib/hooks/useMemo';
-import { GenerateConfig } from '../../generate';
-import { Locale, OnSelect } from '../../interface';
-import TimeUnitColumn, { Unit } from './TimeUnitColumn';
+import type { GenerateConfig } from '../../generate';
+import type { Locale, OnSelect } from '../../interface';
+import type { Unit } from './TimeUnitColumn';
+import TimeUnitColumn from './TimeUnitColumn';
 import { leftPad } from '../../utils/miscUtil';
-import { SharedTimeProps } from '.';
+import type { SharedTimeProps } from '.';
 import { setTime as utilSetTime } from '../../utils/timeUtil';
 
 function shouldUnitsUpdate(prevUnits: Unit[], nextUnits: Unit[]) {
@@ -33,11 +34,11 @@ function generateUnits(
   return units;
 }
 
-export interface BodyOperationRef {
+export type BodyOperationRef = {
   onUpDown: (diff: number) => void;
-}
+};
 
-export interface TimeBodyProps<DateType> extends SharedTimeProps<DateType> {
+export type TimeBodyProps<DateType> = {
   prefixCls: string;
   locale: Locale;
   generateConfig: GenerateConfig<DateType>;
@@ -45,7 +46,7 @@ export interface TimeBodyProps<DateType> extends SharedTimeProps<DateType> {
   onSelect: OnSelect<DateType>;
   activeColumnIndex: number;
   operationRef: React.MutableRefObject<BodyOperationRef | undefined>;
-}
+} & SharedTimeProps<DateType>;
 
 function TimeBody<DateType>(props: TimeBodyProps<DateType>) {
   const {
@@ -136,8 +137,8 @@ function TimeBody<DateType>(props: TimeBodyProps<DateType>) {
   const hours = React.useMemo(() => {
     if (!use12Hours) return memorizedRawHours;
     return memorizedRawHours
-      .filter(isPM ? hourMeta => hourMeta.value >= 12 : hourMeta => hourMeta.value < 12)
-      .map(hourMeta => {
+      .filter(isPM ? (hourMeta) => hourMeta.value >= 12 : (hourMeta) => hourMeta.value < 12)
+      .map((hourMeta) => {
         const hourValue = hourMeta.value % 12;
         const hourLabel = hourValue === 0 ? '12' : leftPad(hourValue, 2);
         return {
@@ -146,7 +147,7 @@ function TimeBody<DateType>(props: TimeBodyProps<DateType>) {
           value: hourValue,
         };
       });
-  }, [use12Hours, memorizedRawHours]);
+  }, [use12Hours, isPM, memorizedRawHours]);
 
   const minutes = generateUnits(0, 59, minuteStep, disabledMinutes && disabledMinutes(originHour));
 
@@ -159,10 +160,10 @@ function TimeBody<DateType>(props: TimeBodyProps<DateType>) {
 
   // ====================== Operations ======================
   operationRef.current = {
-    onUpDown: diff => {
+    onUpDown: (diff) => {
       const column = columns[activeColumnIndex];
       if (column) {
-        const valueIndex = column.units.findIndex(unit => unit.value === column.value);
+        const valueIndex = column.units.findIndex((unit) => unit.value === column.value);
 
         const unitLen = column.units.length;
         for (let i = 1; i < unitLen; i += 1) {
@@ -203,17 +204,17 @@ function TimeBody<DateType>(props: TimeBodyProps<DateType>) {
   }
 
   // Hour
-  addColumnNode(showHour, <TimeUnitColumn key="hour" />, hour, hours, num => {
+  addColumnNode(showHour, <TimeUnitColumn key="hour" />, hour, hours, (num) => {
     onSelect(setTime(isPM, num, minute, second), 'mouse');
   });
 
   // Minute
-  addColumnNode(showMinute, <TimeUnitColumn key="minute" />, minute, minutes, num => {
+  addColumnNode(showMinute, <TimeUnitColumn key="minute" />, minute, minutes, (num) => {
     onSelect(setTime(isPM, hour, num, second), 'mouse');
   });
 
   // Second
-  addColumnNode(showSecond, <TimeUnitColumn key="second" />, second, seconds, num => {
+  addColumnNode(showSecond, <TimeUnitColumn key="second" />, second, seconds, (num) => {
     onSelect(setTime(isPM, hour, minute, num), 'mouse');
   });
 
@@ -231,7 +232,7 @@ function TimeBody<DateType>(props: TimeBodyProps<DateType>) {
       { label: 'AM', value: 0, disabled: AMDisabled },
       { label: 'PM', value: 1, disabled: PMDisabled },
     ],
-    num => {
+    (num) => {
       onSelect(setTime(!!num, hour, minute, second), 'mouse');
     },
   );

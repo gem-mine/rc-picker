@@ -1,12 +1,6 @@
-# rc-picker 
+# rc-picker
 
-[![NPM version][npm-image]][npm-url]
-[![build status][github-actions-image]][github-actions-url]
-[![Codecov][codecov-image]][codecov-url]
-[![Dependencies][david-image]][david-url]
-[![DevDependencies][david-dev-image]][david-dev-url]
-[![npm download][download-image]][download-url]
-[![bundle size][bundlephobia-image]][bundlephobia-url]
+[![NPM version][npm-image]][npm-url] [![build status][github-actions-image]][github-actions-url] [![Codecov][codecov-image]][codecov-url] [![Dependencies][david-image]][david-url] [![DevDependencies][david-dev-image]][david-dev-url] [![npm download][download-image]][download-url] [![bundle size][bundlephobia-image]][bundlephobia-url]
 
 [npm-image]: http://img.shields.io/npm/v/rc-picker.svg?style=flat-square
 [npm-url]: http://npmjs.org/package/rc-picker
@@ -76,8 +70,9 @@ render(<Picker />, mountNode);
 | getPopupContainer | function(trigger) |  | to set the container of the floating layer, while the default is to create a div element in body |
 | onChange | Function(date: moment, dateString: string) |  | a callback function, can be executed when the selected time is changing |
 | onOpenChange | Function(open:boolean) |  | called when open/close picker |
-| onFocus | (evnet:React.FocusEventHandler<HTMLInputElement>) => void |  | called like input's on focus |
-| onBlur | (evnet:React.FocusEventHandler<HTMLInputElement>) => void |  | called like input's on blur |
+| onFocus | (event:React.FocusEvent<HTMLInputElement>) => void |  | called like input's on focus |
+| onBlur | (event:React.FocusEvent<HTMLInputElement>) => void |  | called like input's on blur |
+| onKeyDown | (event:React.KeyboardEvent<HTMLInputElement>, preventDefault: () => void) => void |  | input on keydown event |
 | direction | String: ltr or rtl |  | Layout direction of picker component, it supports RTL direction too. |
 
 ### PickerPanel
@@ -102,13 +97,13 @@ render(<Picker />, mountNode);
 | renderExtraFooter | (mode) => React.Node |  | extra footer |
 | onSelect | Function(date: moment) |  | a callback function, can be executed when the selected time |
 | onPanelChange | Function(value: moment, mode) |  | callback when picker panel mode is changed |
-| onMouseDown | (evnet:React.MouseEventHandler<HTMLInputElement>) => void |  | callback when executed onMouseDown evnent |
+| onMouseDown | (event:React.MouseEvent<HTMLInputElement>) => void |  | callback when executed onMouseDown evnent |
 | direction | String: ltr or rtl |  | Layout direction of picker component, it supports RTL direction too. |
 
 ### RangePicker
 
 | Property | Type | Default | Description |
-| --- | --- | --- | --- |
+| --- | --- | --- | --- | --- |
 | prefixCls | String | rc-picker | prefixCls of this component |
 | className | String | '' | additional css class of root dom |
 | style | React.CSSProperties |  | additional style of root dom node |

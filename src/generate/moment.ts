@@ -1,20 +1,26 @@
-import moment, { Moment } from 'moment';
+import type { Moment } from 'moment';
+import moment from 'moment';
 import { noteOnce } from 'rc-util/lib/warning';
-import { GenerateConfig } from '.';
+import type { GenerateConfig } from '.';
 
 const generateConfig: GenerateConfig<Moment> = {
   // get
   getNow: () => moment(),
-  getWeekDay: date => {
+  getFixedDate: (string) => moment(string, 'YYYY-MM-DD'),
+  getEndDate: (date) => {
+    const clone = date.clone();
+    return clone.endOf('month');
+  },
+  getWeekDay: (date) => {
     const clone = date.clone().locale('en_US');
     return clone.weekday() + clone.localeData().firstDayOfWeek();
   },
-  getYear: date => date.year(),
-  getMonth: date => date.month(),
-  getDate: date => date.date(),
-  getHour: date => date.hour(),
-  getMinute: date => date.minute(),
-  getSecond: date => date.second(),
+  getYear: (date) => date.year(),
+  getMonth: (date) => date.month(),
+  getDate: (date) => date.date(),
+  getHour: (date) => date.hour(),
+  getMinute: (date) => date.minute(),
+  getSecond: (date) => date.second(),
 
   // set
   addYear: (date, diff) => {
@@ -26,8 +32,8 @@ const generateConfig: GenerateConfig<Moment> = {
     return clone.add(diff, 'month');
   },
   addWeek: (date, diff) => {
-    const clone = date.clone()
-    return clone.add(diff, 'week')
+    const clone = date.clone();
+    return clone.add(diff, 'week');
   },
   addDate: (date, diff) => {
     const clone = date.clone();
@@ -38,8 +44,8 @@ const generateConfig: GenerateConfig<Moment> = {
     return clone.year(year);
   },
   setWeek: (date, week) => {
-    const clone = date.clone()
-    return clone.week(week)
+    const clone = date.clone();
+    return clone.week(week);
   },
   setMonth: (date, month) => {
     const clone = date.clone();
@@ -68,23 +74,28 @@ const generateConfig: GenerateConfig<Moment> = {
 
   // Compare
   isAfter: (date1, date2) => date1.isAfter(date2),
-  isValidate: date => date.isValid(),
+  isValidate: (date) => date.isValid(),
 
   locale: {
-    getWeekFirstDay: locale => {
+    getWeekFirstDay: (locale) => {
       const date = moment().locale(locale);
       return date.localeData().firstDayOfWeek();
+    },
+    getWeekFirstDate: (locale, date) => {
+      const clone = date.clone();
+      const result = clone.locale(locale);
+      return result.weekday(0);
     },
     getWeek: (locale, date) => {
       const clone = date.clone();
       const result = clone.locale(locale);
       return result.week();
     },
-    getShortWeekDays: locale => {
+    getShortWeekDays: (locale) => {
       const date = moment().locale(locale);
       return date.localeData().weekdaysMin();
     },
-    getShortMonths: locale => {
+    getShortMonths: (locale) => {
       const date = moment().locale(locale);
       return date.localeData().monthsShort();
     },

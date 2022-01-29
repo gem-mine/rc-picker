@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PanelMode } from '../interface';
+import type { PanelMode } from '../interface';
 
 export default function getExtraFooter(
   prefixCls: string,
@@ -10,7 +10,5 @@ export default function getExtraFooter(
     return null;
   }
 
-  return (
-    <div className={`${prefixCls}-footer-extra`}>{renderExtraFooter(mode)}</div>
-  );
+  return <div className={`${prefixCls}-footer-extra`}>{renderExtraFooter(mode)}</div>;
 }

@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { GenerateConfig } from '../../generate';
+import wareki from 'wareki';
+import type { GenerateConfig } from '../../generate';
 import { YEAR_DECADE_COUNT } from '.';
-import { Locale, NullableDateType } from '../../interface';
+import type { Locale, NullableDateType } from '../../interface';
 import useCellClassName from '../../hooks/useCellClassName';
 import { formatValue, isSameYear } from '../../utils/dateUtil';
 import RangeContext from '../../RangeContext';
@@ -10,21 +11,23 @@ import PanelBody from '../PanelBody';
 export const YEAR_COL_COUNT = 3;
 const YEAR_ROW_COUNT = 4;
 
-export interface YearBodyProps<DateType> {
+export type YearBodyProps<DateType> = {
   prefixCls: string;
   locale: Locale;
+  localeCode?: string;
   generateConfig: GenerateConfig<DateType>;
   value?: NullableDateType<DateType>;
   viewDate: DateType;
   disabledDate?: (date: DateType) => boolean;
   onSelect: (value: DateType) => void;
-}
+};
 
 function YearBody<DateType>(props: YearBodyProps<DateType>) {
-  const { prefixCls, value, viewDate, locale, generateConfig } = props;
+  const { prefixCls, value, viewDate, locale, generateConfig, localeCode } = props;
   const { rangedValue, hoverRangedValue } = React.useContext(RangeContext);
 
   const yearPrefixCls = `${prefixCls}-cell`;
+  const isJa = localeCode === 'ja';
 
   // =============================== Year ===============================
   const yearNumber = generateConfig.getYear(viewDate);
@@ -57,10 +60,17 @@ function YearBody<DateType>(props: YearBodyProps<DateType>) {
       rowNum={YEAR_ROW_COUNT}
       colNum={YEAR_COL_COUNT}
       baseDate={baseYear}
-      getCellText={generateConfig.getYear}
+      getCellText={
+        isJa
+          ? (data) =>
+              wareki(String(generateConfig.getYear(data)), {
+                unit: true,
+              })
+          : generateConfig.getYear
+      }
       getCellClassName={getCellClassName}
       getCellDate={generateConfig.addYear}
-      titleCell={date =>
+      titleCell={(date) =>
         formatValue(date, {
           locale,
           format: 'YYYY',

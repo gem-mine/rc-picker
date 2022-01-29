@@ -1,8 +1,8 @@
-global.requestAnimationFrame = callback => {
+global.requestAnimationFrame = (callback) => {
   global.setTimeout(callback, 0);
 };
 
-global.cancelAnimationFrame = id => {
+global.cancelAnimationFrame = (id) => {
   global.clearTimeout(id);
 };
 
@@ -13,15 +13,10 @@ Enzyme.configure({ adapter: new Adapter() });
 
 Object.assign(Enzyme.ReactWrapper.prototype, {
   openPicker(index = 0) {
-    this.find('input')
-      .at(index)
-      .simulate('mousedown')
-      .simulate('focus');
+    this.find('input').at(index).simulate('mousedown').simulate('focus');
   },
   closePicker(index = 0) {
-    this.find('input')
-      .at(index)
-      .simulate('blur');
+    this.find('input').at(index).simulate('blur');
   },
   confirmOK() {
     this.find('.rc-picker-ok > *').simulate('click');
@@ -35,7 +30,7 @@ Object.assign(Enzyme.ReactWrapper.prototype, {
 
     const table = this.find('table').at(index);
 
-    table.find('td').forEach(td => {
+    table.find('td').forEach((td) => {
       if (td.text() === String(text) && td.props().className.includes('-in-view')) {
         matchCell = td;
       }
@@ -55,7 +50,7 @@ Object.assign(Enzyme.ReactWrapper.prototype, {
   },
   clickButton(type) {
     let matchBtn;
-    this.find('button').forEach(btn => {
+    this.find('button').forEach((btn) => {
       if (btn.props().className.includes(`-header-${type}-btn`)) {
         matchBtn = btn;
       }
@@ -70,9 +65,13 @@ Object.assign(Enzyme.ReactWrapper.prototype, {
     this.find('.rc-picker-clear-btn').simulate('mouseUp');
   },
   keyDown(which, info = {}, index = 0) {
-    this.find('input')
-      .at(index)
-      .simulate('keydown', { ...info, which });
+    let component = this.find('input');
+
+    if (component.length === 0) {
+      component = this.find('.rc-picker-panel');
+    }
+
+    component.at(index).simulate('keydown', { ...info, which });
   },
   inputValue(text, index = 0) {
     this.find('input')

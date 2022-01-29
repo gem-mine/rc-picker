@@ -1,5 +1,6 @@
 import React from 'react';
-import moment, { Moment } from 'moment';
+import type { Moment } from 'moment';
+import moment from 'moment';
 import Picker from '../src/Picker';
 import RangePicker from '../src/RangePicker';
 import momentGenerateConfig from '../src/generate/moment';
@@ -25,7 +26,7 @@ export default () => {
             locale={zhCN}
             allowClear
             defaultValue={defaultStartValue}
-            panelRender={node => (
+            panelRender={(node) => (
               <>
                 <button
                   type="button"
@@ -49,7 +50,7 @@ export default () => {
             locale={zhCN}
             allowClear
             defaultValue={defaultValue}
-            panelRender={node => (
+            panelRender={(node) => (
               <>
                 <button
                   type="button"

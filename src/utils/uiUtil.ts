@@ -1,8 +1,8 @@
 import KeyCode from 'rc-util/lib/KeyCode';
 import raf from 'rc-util/lib/raf';
 import isVisible from 'rc-util/lib/Dom/isVisible';
-import { GenerateConfig } from '../generate';
-import { CustomFormat, PanelMode, PickerMode } from '../interface';
+import type { GenerateConfig } from '../generate';
+import type { CustomFormat, PanelMode, PickerMode } from '../interface';
 
 const scrollIds = new Map<HTMLElement, number>();
 
@@ -59,13 +59,13 @@ export function scrollTo(element: HTMLElement, to: number, duration: number) {
 }
 /* eslint-enable */
 
-export interface KeyboardConfig {
+export type KeyboardConfig = {
   onLeftRight?: ((diff: number) => void) | null;
   onCtrlLeftRight?: ((diff: number) => void) | null;
   onUpDown?: ((diff: number) => void) | null;
   onPageUpDown?: ((diff: number) => void) | null;
   onEnter?: (() => void) | null;
-}
+};
 export function createKeyDownHandler(
   event: React.KeyboardEvent<HTMLElement>,
   { onLeftRight, onCtrlLeftRight, onUpDown, onPageUpDown, onEnter }: KeyboardConfig,
@@ -145,7 +145,7 @@ export function createKeyDownHandler(
 
 // ===================== Format =====================
 export function getDefaultFormat<DateType>(
-  format: string | CustomFormat<DateType> | Array<string | CustomFormat<DateType>> | undefined,
+  format: string | CustomFormat<DateType> | (string | CustomFormat<DateType>)[] | undefined,
   picker: PickerMode | undefined,
   showTime: boolean | object | undefined,
   use12Hours: boolean | undefined,
@@ -201,7 +201,7 @@ export function addGlobalMouseDownEvent(callback: ClickEventHandler) {
   if (!globalClickFunc && typeof window !== 'undefined' && window.addEventListener) {
     globalClickFunc = (e: MouseEvent) => {
       // Clone a new list to avoid repeat trigger events
-      [...clickCallbacks].forEach(queueFunc => {
+      [...clickCallbacks].forEach((queueFunc) => {
         queueFunc(e);
       });
     };
@@ -217,6 +217,17 @@ export function addGlobalMouseDownEvent(callback: ClickEventHandler) {
       globalClickFunc = null;
     }
   };
+}
+
+export function getTargetFromEvent(e: Event) {
+  const target = e.target as HTMLElement;
+
+  // get target if in shadow dom
+  if (e.composed && target.shadowRoot) {
+    return (e.composedPath?.()[0] || target) as HTMLElement;
+  }
+
+  return target;
 }
 
 // ====================== Mode ======================
@@ -264,5 +275,5 @@ export function elementsContains(
   elements: (HTMLElement | undefined | null)[],
   target: HTMLElement,
 ) {
-  return elements.some(ele => ele && ele.contains(target));
+  return elements.some((ele) => ele && ele.contains(target));
 }

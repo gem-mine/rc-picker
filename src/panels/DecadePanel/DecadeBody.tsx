@@ -1,22 +1,22 @@
 import * as React from 'react';
-import { GenerateConfig } from '../../generate';
+import type { GenerateConfig } from '../../generate';
 import { DECADE_DISTANCE_COUNT, DECADE_UNIT_DIFF } from '.';
 import PanelBody from '../PanelBody';
 
 export const DECADE_COL_COUNT = 3;
 const DECADE_ROW_COUNT = 4;
 
-export interface YearBodyProps<DateType> {
+export type YearBodyProps<DateType> = {
   prefixCls: string;
   generateConfig: GenerateConfig<DateType>;
   viewDate: DateType;
   disabledDate?: (date: DateType) => boolean;
   onSelect: (value: DateType) => void;
-}
+};
 
 function DecadeBody<DateType>(props: YearBodyProps<DateType>) {
   const DECADE_UNIT_DIFF_DES = DECADE_UNIT_DIFF - 1;
-  const { prefixCls, viewDate, generateConfig, disabledDate } = props;
+  const { prefixCls, viewDate, generateConfig } = props;
 
   const cellPrefixCls = `${prefixCls}-cell`;
 
@@ -35,13 +35,10 @@ function DecadeBody<DateType>(props: YearBodyProps<DateType>) {
   );
 
   const getCellClassName = (date: DateType) => {
-    const disabled = disabledDate && disabledDate(date);
-
     const startDecadeNumber = generateConfig.getYear(date);
     const endDecadeNumber = startDecadeNumber + DECADE_UNIT_DIFF_DES;
 
     return {
-      [`${cellPrefixCls}-disabled`]: disabled,
       [`${cellPrefixCls}-in-view`]:
         startDecadeYear <= startDecadeNumber && endDecadeNumber <= endDecadeYear,
       [`${cellPrefixCls}-selected`]: startDecadeNumber === decadeYearNumber,
@@ -54,7 +51,7 @@ function DecadeBody<DateType>(props: YearBodyProps<DateType>) {
       rowNum={DECADE_ROW_COUNT}
       colNum={DECADE_COL_COUNT}
       baseDate={baseDecadeYear}
-      getCellText={date => {
+      getCellText={(date) => {
         const startDecadeNumber = generateConfig.getYear(date);
         return `${startDecadeNumber}-${startDecadeNumber + DECADE_UNIT_DIFF_DES}`;
       }}

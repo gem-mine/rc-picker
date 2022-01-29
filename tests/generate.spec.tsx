@@ -5,7 +5,7 @@ import dateFnsGenerateConfig from '../src/generate/dateFns';
 import { getMoment } from './util/commonUtil';
 
 import 'dayjs/locale/zh-cn';
-import { GenerateConfig } from '../src/generate';
+import type { GenerateConfig } from '../src/generate';
 
 describe('Picker.Generate', () => {
   beforeAll(() => {
@@ -26,13 +26,21 @@ describe('Picker.Generate', () => {
     describe(name, () => {
       it('get', () => {
         const now = generateConfig.getNow();
+        const fixedDate = generateConfig.getFixedDate('1990-09-03');
+        const endDate = generateConfig.getEndDate(fixedDate);
         expect(generateConfig.getWeekDay(now)).toEqual(1);
         expect(generateConfig.getSecond(now)).toEqual(3);
         expect(generateConfig.getMinute(now)).toEqual(2);
         expect(generateConfig.getHour(now)).toEqual(1);
         expect(generateConfig.getDate(now)).toEqual(3);
+        expect(generateConfig.getDate(fixedDate)).toEqual(3);
+        expect(generateConfig.getDate(endDate)).toEqual(30);
         expect(generateConfig.getMonth(now)).toEqual(8);
+        expect(generateConfig.getMonth(fixedDate)).toEqual(8);
+        expect(generateConfig.getMonth(endDate)).toEqual(8);
         expect(generateConfig.getYear(now)).toEqual(1990);
+        expect(generateConfig.getYear(fixedDate)).toEqual(1990);
+        expect(generateConfig.getYear(endDate)).toEqual(1990);
       });
 
       it('set', () => {
@@ -72,7 +80,7 @@ describe('Picker.Generate', () => {
       describe('locale', () => {
         describe('parse', () => {
           it('basic', () => {
-            ['2000-01-02', '02/01/2000'].forEach(str => {
+            ['2000-01-02', '02/01/2000'].forEach((str) => {
               const date = generateConfig.locale.parse('en_US', str, ['YYYY-MM-DD', 'DD/MM/YYYY']);
 
               expect(generateConfig.locale.format('en_US', date!, 'YYYY-MM-DD')).toEqual(
@@ -122,6 +130,20 @@ describe('Picker.Generate', () => {
             ),
           ).toEqual(6);
         });
+      });
+
+      it('getWeekFirstDate', () => {
+        const formatStr = name === 'date-fns' ? 'yyyy-MM-dd' : 'YYYY-MM-DD';
+        const usDate = generateConfig.locale.getWeekFirstDate(
+          'en_US',
+          generateConfig.locale.parse('en_US', '2020-12-30', [formatStr]),
+        );
+        const cnDate = generateConfig.locale.getWeekFirstDate(
+          'zh_CN',
+          generateConfig.locale.parse('zh_CN', '2020-12-30', [formatStr]),
+        );
+        expect(generateConfig.locale.format('en_US', usDate, formatStr)).toEqual('2020-12-27');
+        expect(generateConfig.locale.format('zh_CN', cnDate, formatStr)).toEqual('2020-12-28');
       });
 
       it('Parse format Wo', () => {

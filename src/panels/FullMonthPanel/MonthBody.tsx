@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { GenerateConfig } from '../../generate';
-import { Locale } from '../../interface';
-import { formatValue, isSameMonth } from '../../utils/dateUtil';
+import type { GenerateConfig } from '../../generate';
+import type { Locale } from '../../interface';
+import { formatValue } from '../../utils/dateUtil';
 import RangeContext from '../../RangeContext';
 import useCellClassName from '../../hooks/useCellClassName';
 import PanelBody from '../PanelBody';
@@ -62,7 +62,7 @@ function MonthBody<DateType>(props: MonthBodyProps<DateType>) {
       colNum={MONTH_COL_COUNT}
       baseDate={baseMonth}
       getCellNode={getCellNode}
-      getCellText={date =>
+      getCellText={(date) =>
         locale.monthFormat
           ? formatValue(date, {
               locale,
@@ -73,7 +73,7 @@ function MonthBody<DateType>(props: MonthBodyProps<DateType>) {
       }
       getCellClassName={getCellClassName}
       getCellDate={generateConfig.addMonth}
-      titleCell={date =>
+      titleCell={(date) =>
         formatValue(date, {
           locale,
           format: 'YYYY-MM',

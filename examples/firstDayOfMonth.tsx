@@ -1,5 +1,5 @@
 import React from 'react';
-import { Moment } from 'moment';
+import type { Moment } from 'moment';
 import Picker from '../src/Picker';
 import PickerPanel from '../src/PickerPanel';
 import momentGenerateConfig from '../src/generate/moment';
@@ -33,11 +33,7 @@ export default () => (
       />
     </div>
     <div>
-      <Picker<Moment>
-        locale={zhCN}
-        generateConfig={momentGenerateConfig}
-        dateRender={dateRender}
-      />
+      <Picker<Moment> locale={zhCN} generateConfig={momentGenerateConfig} dateRender={dateRender} />
     </div>
   </div>
 );

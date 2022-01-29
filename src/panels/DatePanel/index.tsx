@@ -1,24 +1,25 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import DateBody, { DateBodyPassProps, DateRender } from './DateBody';
+import type { DateBodyPassProps, DateRender } from './DateBody';
+import DateBody from './DateBody';
 import DateHeader from './DateHeader';
-import { PanelMode, PanelSharedProps } from '../../interface';
+import type { PanelMode, PanelSharedProps } from '../../interface';
 import { WEEK_DAY_COUNT } from '../../utils/dateUtil';
-import { createKeyDownHandler, KeyboardConfig } from '../../utils/uiUtil';
+import type { KeyboardConfig } from '../../utils/uiUtil';
+import { createKeyDownHandler } from '../../utils/uiUtil';
 
 export const DATE_ROW_COUNT = 6;
 
-export interface DatePanelProps<DateType>
-  extends PanelSharedProps<DateType>,
-    DateBodyPassProps<DateType> {
+export type DatePanelProps<DateType> = {
   active?: boolean;
   dateRender?: DateRender<DateType>;
 
   // Used for week panel
   panelName?: string;
   keyboardConfig?: KeyboardConfig;
-  mergedMode?: PanelMode
-}
+  mergedMode?: PanelMode;
+} & PanelSharedProps<DateType> &
+  DateBodyPassProps<DateType>;
 
 function DatePanel<DateType>(props: DatePanelProps<DateType>) {
   const {
@@ -38,18 +39,18 @@ function DatePanel<DateType>(props: DatePanelProps<DateType>) {
 
   // ======================= Keyboard =======================
   operationRef.current = {
-    onKeyDown: event =>
+    onKeyDown: (event) =>
       createKeyDownHandler(event, {
-        onLeftRight: diff => {
+        onLeftRight: (diff) => {
           onSelect(generateConfig.addDate(value || viewDate, diff), 'key');
         },
-        onCtrlLeftRight: diff => {
+        onCtrlLeftRight: (diff) => {
           onSelect(generateConfig.addYear(value || viewDate, diff), 'key');
         },
-        onUpDown: diff => {
+        onUpDown: (diff) => {
           onSelect(generateConfig.addDate(value || viewDate, diff * WEEK_DAY_COUNT), 'key');
         },
-        onPageUpDown: diff => {
+        onPageUpDown: (diff) => {
           onSelect(generateConfig.addMonth(value || viewDate, diff), 'key');
         },
         ...keyboardConfig,
@@ -101,7 +102,7 @@ function DatePanel<DateType>(props: DatePanelProps<DateType>) {
       />
       <DateBody
         {...props}
-        onSelect={date => onSelect(date, 'mouse')}
+        onSelect={(date) => onSelect(date, 'mouse')}
         prefixCls={prefixCls}
         value={value}
         viewDate={viewDate}

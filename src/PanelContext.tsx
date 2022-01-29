@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { OnSelect } from './interface';
+import type { OnSelect, PanelMode } from './interface';
 
 export type ContextOperationRefProps = {
   onKeyDown?: (e: React.KeyboardEvent<HTMLElement>) => boolean;
   onClose?: () => void;
 };
 
-export interface PanelContextProps {
+export type PanelContextProps = {
   operationRef?: React.MutableRefObject<ContextOperationRefProps | null>;
   /** Only work with time panel */
   hideHeader?: boolean;
@@ -18,10 +18,11 @@ export interface PanelContextProps {
   onSelect?: OnSelect<any>;
   hideRanges?: boolean;
   open?: boolean;
+  mode?: PanelMode;
 
   /** Only used for TimePicker and this is a deprecated prop */
   defaultOpenValue?: any;
-}
+};
 
 const PanelContext = React.createContext<PanelContextProps>({});
 
